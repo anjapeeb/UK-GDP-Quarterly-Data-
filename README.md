@@ -7,4 +7,4 @@ Using UK data on GDP, the unemployment rate, consumer price Inflation and the in
 - Phillips and Perron test
 - Elliott, Rothenberg and Stock's DF-GLS
 
-Work from Time Series lab with Prof Julia Darby 2018
+Work from Time Series lab with Prof Julia Darby 2018 - please use gdp_apbversion.do for full codes and method
