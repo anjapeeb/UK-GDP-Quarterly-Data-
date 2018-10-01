@@ -2,8 +2,8 @@
 * Section A - load data, set time series format
 *******************************************************************************
 clear all 
-cd "/Users/annapeebles-brown/Library/Mobile Documents/com~apple~CloudDocs/Documents/Econometrics"   /*specifies working directory*/
-import delimited tseriesq.csv /*loads data from working directory*/
+cd "/Users/annapeebles-brown/Library/Mobile Documents/com~apple~CloudDocs/Documents/Econometrics"   
+import delimited tseriesq.csv 
 * Data were downloaded from the UK Office of National Statistics 
 * and the Bank of England (tbr and tbr_eq) in Jan 2017
 * labels are set for each series
@@ -13,14 +13,14 @@ label variable cpi "UK consumer price inflation, seasonally adjusted"
 label variable tbr "UK 3 month treasury bill rate"
 label variable tbr_eq "UK 3 month treasury bill rate, end quarter value"
 gen trend =_n  /*t is 1,2,...,_N, a new column vector = time variable*/
-* Stata neeeds the dates to be set up in a way it understands...
+
 gen date=yq(year,quarter)
-log using lab1_gdp, text replace /*logs output in a text file lab1_gdp.log*/
-tsset date, quarterly /*tells Stata that the data are quarterly time series*/
+log using lab1_gdp, text replace 
+tsset date, quarterly 
 describe
 list
 ********************************************************************************
-* Section B - Graphical Analysis of GDP data
+Graphical Analysis of GDP data
 ********************************************************************************
 gen lgdp=log(gdp) /*takes natural log of GDP*/ 
 gen dlgdp=d.lgdp /*first difference* or equivalently dlgdp=lgdp-l.lgdp*/
@@ -42,7 +42,7 @@ graph export charts2.pdf, replace
 
 
 *******************************************************************************
-* Section C - Summary Statistics, for full and sub sample 
+Summary Statistics, for full and sub sample 
 *******************************************************************************
 * look at summary statistics for full sample 
 * and pre- and post-1985 samples
@@ -77,7 +77,7 @@ ac dlgdpb, lags(8) saving(ac_db, replace) ylabel(-1(1)1) title("post-1985 acf fo
 gr combine ac_a.gph ac_da.gph ac_b.gph ac_db.gph, col(2) title("sub-sample acfs for lgdp and dlgdp") saving(charts2s, replace)
 graph export charts2s.pdf, replace
 *******************************************************************************
-* Section D -  Formal unit root tests 
+Formal unit root tests 
 ********************************************************************************
 * Formal unit root tests for lgdp
 * In each case...
@@ -114,60 +114,5 @@ dfuller dlgdp, lags(2) reg
 pperron dlgdp, reg
 * Elliott, Rothenberg and Stock's DF-GLS test, no trend
 dfgls dlgdp, maxlag(4)
-
-
-********************************************************************************
-* ANALYSIS OF UNEMPLOYMENT RATE STARTS HERE...
-* Section B.1 - produce time series and acf plots for unr and dunr
-********************************************************************************
-drop if year<1971 /*the data for unr stats in 1971*/
-gen dunr=unr-l.unr
-tsline unr, title("unr") saving(ch1,replace)
-tsline dunr, title("dunr") saving(ch2,replace)
-ac unr, lags(8) saving(ch3,replace) ylabel(-1(1)1) title("full sample acf for unr") 
-ac dunr, lags(8) saving(ch4,replace) ylabel(-1(1)1) title("full sample acf for dunr") 
-gr combine ch1.gph ch2.gph ch3.gph ch4.gph, col(2) title("Summary Plots: Unemployment Rate") saving(ch_unr1, replace)
-graph export ch_unr1.pdf, replace
-
-
-dfuller unr, lags(5) reg 
-dfuller unr, lags(3) reg 
-dfuller unr, lags(2) reg 
-* Phillips and Perron test, no trend
-pperron unr, reg 
-* Elliott, Rothenberg and Stock's DF-GLS test, no trend
-dfgls unr, maxlag(10) 
-dfsummary unr, lag(10) reg
-
-
-dfuller dunr, lags(5) reg 
-dfuller dunr, lags(1) reg 
-* Phillips and Perron test, no trend
-pperron dunr, reg
-* Elliott, Rothenberg and Stock's DF-GLS test, no trend
-dfgls dunr, maxlag(10)
-dfsummary dunr, reg 
-
-
-
-
-
-*******************************************************************************
-
-
-********************************************************************************
-* ANALYSIS OF CONSUMER PRIOE INFLATION STARTS HERE...
-* Section B.2 - produce time series and acf plots for cpi and dcpi
-********************************************************************************
-drop if year<1989 /*the data for cpi stats in 1989*/
-gen dcpi=cpi-l.cpi
-tsline cpi, title("cpi") saving(ch1,replace)
-tsline dcpi, title("dcpi") saving(ch2,replace)
-ac cpi, lags(8) saving(ch3,replace) ylabel(-1(1)1) title("full sample acf for cpi") 
-ac dcpi, lags(8) saving(ch4,replace) ylabel(-1(1)1) title("full sample acf for dcpi") 
-gr combine ch1.gph ch2.gph ch3.gph ch4.gph, col(2) title("Summary Plots: Consumer Price Inflation") saving(ch_cpi1, replace)
-graph export ch_cpi1.pdf, replace
-*******************************************************************************
-
 
 log close
