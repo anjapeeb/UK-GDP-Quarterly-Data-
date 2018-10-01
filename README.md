@@ -1,4 +1,4 @@
-# UK-GDP-Quarterly-Data-
+# UK GDP Quarterly Data
 Time-Series analysis with Stata (complete) and Python (in progress)
 
 I use UK data on GDP, the unemployment rate, consumer price Inflation and the interest rate on 3 month Treasury bills, and test for weak stationarity using: 
